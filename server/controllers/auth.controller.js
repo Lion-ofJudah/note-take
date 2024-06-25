@@ -1,35 +1,41 @@
 import User from "../models/user.model.js";
+import { signUpValidator } from "../middlewares/auth.middleware.js";
 import { errorLog } from "../utils/logger.js";
 
-export const userSignUp = async (req, res) => {
-  try {
-    const { userName, email, password } = req.body;
+export const userSignUp = [
+  signUpValidator,
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      res
-        .status(400)
-        .json({ success: false, message: "Email already at use." });
-    }
+  async (req, res) => {
+    try {
+      const { userName, email, password } = req.body;
 
-    const newUser = await User.create({
-      userName,
-      email,
-      password,
-    });
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Email already in use.",
+        });
+      }
 
-    const { password: pass, ...others } = newUser._doc;
+      const newUser = await User.create({
+        userName,
+        email,
+        password,
+      });
 
-    newUser.save();
-    res
-      .status(200)
-      .json({
+      const { password: pass, ...others } = newUser._doc;
+
+      return res.status(201).json({
         success: true,
         message: "User created successfully.",
         data: others,
       });
-  } catch (error) {
-    errorLog(error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
+    } catch (error) {
+      errorLog(error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    }
+  },
+];
