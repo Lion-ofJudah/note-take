@@ -1,5 +1,7 @@
 import express from "express";
+
 import { successLog } from "./utils/logger.js";
+import "./db/index.js";
 
 const app = express();
 
