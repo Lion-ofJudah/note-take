@@ -1,10 +1,57 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PasswordInput from "../components/PasswordInput";
 import TextInput from "../components/TextInput";
 import Google from "../components/Google";
 import Github from "../components/Github";
+import Popup from "../components/Popup";
 
 export default function SignUp() {
+  const [inputData, setInputData] = useState({
+    userName: "",
+    email: "",
+    password: "",
+  });
+  const [popupMessage, setPopupMessage] = useState<string>("");
+  const [popupType, setPopupType] = useState<"success" | "error">("success");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputData({ ...inputData, [event.target.id]: event.target.value });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setPopupMessage("");
+    setPopupType("success");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        setPopupMessage(data.message);
+        setPopupType("error");
+      } else {
+        setPopupMessage(data.message);
+        setPopupType("success");
+      }
+    } catch (err: any) {
+      setPopupMessage("An error occurred. Please try again.");
+      setPopupType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full flex items-center justify-center h-screen bg-[#282e2b]">
       <div className="flex w-2/3 h-4/5 rounded-3xl bg-white">
@@ -26,23 +73,43 @@ export default function SignUp() {
               Please create a new account
             </p>
           </div>
-          <form className="w-full flex flex-col items-center justify-center my-2">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col items-center justify-center my-2"
+          >
             <div className="flex flex-col gap-3 items-center justify-center w-2/3 my-8">
-              <TextInput placeholder="User name" />
-              <TextInput placeholder="Email address" />
-              <PasswordInput />
+              <TextInput
+                id="userName"
+                value={inputData.userName}
+                onChange={handleChange}
+                placeholder="User name"
+              />
+              <TextInput
+                id="email"
+                value={inputData.email}
+                onChange={handleChange}
+                placeholder="Email address"
+              />
+              <PasswordInput
+                id="password"
+                value={inputData.password}
+                onChange={handleChange}
+              />
               <span className="w-full text-right cursor-pointer text-gray-500">
                 Forgot password?
               </span>
             </div>
-            <button className="w-2/3 text-center py-4 rounded-2xl bg-[#8fe4a8] text-white font-semibold">
-              Sign up
+            <button
+              disabled={loading}
+              className="w-2/3 text-center py-4 rounded-2xl bg-[#8fe4a8] text-white font-semibold"
+            >
+              {loading ? "Signing up..." : "Sign up"}
             </button>
           </form>
           <div className="flex w-2/3 items-center justify-center my-4">
-            <span className="border-b w-1/3"></span>
-            <p className="mx-4">Or Sign up with</p>
-            <span className="border-b w-1/3"></span>
+            <span className="border-b w-1/4"></span>
+            <p className="w-2/4 text-center">Or Sign up with</p>
+            <span className="border-b w-1/4"></span>
           </div>
           <div className="flex w-2/3 gap-6">
             <div className="w-1/2">
@@ -60,6 +127,7 @@ export default function SignUp() {
           </div>
         </div>
       </div>
+      {popupMessage && <Popup message={popupMessage} type={popupType} />}
     </div>
   );
 }

@@ -1,6 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import "./PasswordInput.module.css";
 
-export default function PasswordInput() {
+interface Props {
+  id: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default function PasswordInput({ id, value, onChange }: Props) {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
 
   const handleClick = () => {
@@ -10,6 +17,9 @@ export default function PasswordInput() {
     <div className="flex w-full rounded-2xl items-center justify-center px-4 py-3 border">
       <input
         type={isPasswordVisible ? "text" : "password"}
+        id={id}
+        value={value}
+        onChange={onChange}
         placeholder="Password"
         className="w-full focus-within:outline-none focus-within:border-none"
       />
