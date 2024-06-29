@@ -68,7 +68,7 @@ export default function SignUp() {
             <p className="text-2xl font-bold cursor-pointer">Note-take</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-5xl font-bold">Hello!</p>
+            <p className="text-5xl font-bold">Hello</p>
             <p className="text-lg text-gray-500 font-semibold">
               Please create a new account
             </p>
@@ -95,20 +95,17 @@ export default function SignUp() {
                 value={inputData.password}
                 onChange={handleChange}
               />
-              <span className="w-full text-right cursor-pointer text-gray-500">
-                Forgot password?
-              </span>
             </div>
             <button
               disabled={loading}
               className="w-2/3 text-center py-4 rounded-2xl bg-[#8fe4a8] text-white font-semibold"
             >
-              {loading ? "Signing up..." : "Sign up"}
+              {loading ? "Signing up..." : "Signup"}
             </button>
           </form>
           <div className="flex w-2/3 items-center justify-center my-4">
             <span className="border-b w-1/4"></span>
-            <p className="w-2/4 text-center">Or Sign up with</p>
+            <p className="w-2/4 text-center">Or Signup with</p>
             <span className="border-b w-1/4"></span>
           </div>
           <div className="flex w-2/3 gap-6">
@@ -120,7 +117,7 @@ export default function SignUp() {
             </div>
           </div>
           <div className="flex w-2/3 items-center justify-center gap-2 mt-4">
-            <p>Don't have an account?</p>
+            <p>Already have an account?</p>
             <Link to={"/login"} className="text-[#8fe4a8] underline">
               Login
             </Link>
