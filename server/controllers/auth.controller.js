@@ -58,7 +58,7 @@ export const userLogin = [
         });
       }
 
-      const isPasswordSimilar = user.comparePassword(password);
+      const isPasswordSimilar = await user.comparePassword(password);
       if (!isPasswordSimilar) {
         return res.status(401).json({
           success: false,
