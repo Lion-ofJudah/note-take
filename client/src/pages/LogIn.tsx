@@ -1,10 +1,59 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import TextInput from "../components/TextInput";
 import PasswordInput from "../components/PasswordInput";
 import Google from "../components/Google";
 import Github from "../components/Github";
+import Popup from "../components/Popup";
 
 export default function LogIn() {
+  const [inputData, setInputData] = useState({
+    email: "",
+    password: "",
+  });
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupType, setPopupType] = useState<"success" | "error">("success");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputData({ ...inputData, [event.target.id]: event.target.value });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setPopupMessage("");
+    setPopupType("success");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        setPopupMessage(data.message);
+        setPopupType("error");
+      } else {
+        setPopupMessage(data.message);
+        setPopupType("success");
+        navigate("/");
+      }
+    } catch (error) {
+      setPopupMessage("An error occurred. Please try again.");
+      setPopupType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full h-screen bg-[#282e2b] flex items-center justify-center">
       <div className="bg-white w-2/3 h-4/5 flex rounded-3xl">
@@ -26,21 +75,31 @@ export default function LogIn() {
               Please login to your account
             </p>
           </div>
-          <form className="w-full flex flex-col items-center justify-center my-2">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col items-center justify-center my-2"
+          >
             <div className="flex flex-col gap-3 items-center justify-center w-2/3 my-8">
               <TextInput
                 id="email"
-                value=""
-                onChange={() => {}}
+                value={inputData.email}
+                onChange={handleChange}
                 placeholder="Email address"
               />
-              <PasswordInput id="password" value="" onChange={() => {}} />
+              <PasswordInput
+                id="password"
+                value={inputData.password}
+                onChange={handleChange}
+              />
               <span className="w-full text-right cursor-pointer text-gray-500">
                 Forgot password?
               </span>
             </div>
-            <button className="w-2/3 text-center py-4 rounded-2xl bg-[#8fe4a8] text-white font-semibold">
-              Login
+            <button
+              disabled={loading}
+              className="w-2/3 text-center py-4 rounded-2xl bg-[#8fe4a8] text-white font-semibold"
+            >
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
           <div className="flex w-2/3 items-center justify-center my-4">
@@ -64,6 +123,7 @@ export default function LogIn() {
           </div>
         </div>
       </div>
+      {popupMessage && <Popup message={popupMessage} type={popupType} />}
     </div>
   );
 }
