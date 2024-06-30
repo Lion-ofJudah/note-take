@@ -59,7 +59,7 @@ export default function LogIn() {
       <div className="bg-white w-2/3 h-4/5 flex rounded-3xl">
         <div className="flex flex-1 items-center justify-end w-full">
           <div className="flex justify-center items-center bg-[#e9f9ee] w-5/6 rounded-[50px] h-5/6">
-            <img src="/images/login1.png" alt="" />
+            <img src="/images/login.png" alt="" />
           </div>
         </div>
         <div className="flex flex-col flex-1 items-center justify-center">
