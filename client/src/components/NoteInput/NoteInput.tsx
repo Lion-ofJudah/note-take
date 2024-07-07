@@ -1,13 +1,11 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 interface Props {
-  inputData: { title: string; body: string };
-  onChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  titleRef: React.RefObject<HTMLInputElement>;
+  bodyRef: React.RefObject<HTMLTextAreaElement>;
 }
 
-export default function NoteInput({ inputData, onChange }: Props) {
+export default function NoteInput({ titleRef, bodyRef }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -35,9 +33,8 @@ export default function NoteInput({ inputData, onChange }: Props) {
       <input
         type="text"
         placeholder="Title"
-        value={inputData.title}
+        ref={titleRef}
         id="title"
-        onChange={onChange}
         className={`w-full px-2 py-3 focus:outline-none focus:border-none rounded-2xl ${
           isFocused ? "block" : "hidden"
         }`}
@@ -45,8 +42,7 @@ export default function NoteInput({ inputData, onChange }: Props) {
       <textarea
         placeholder="Take a note..."
         id="body"
-        value={inputData.body}
-        onChange={onChange}
+        ref={bodyRef}
         className={`w-full px-2 py-3 focus-within:outline-none focus:border-none rounded-2xl ${
           isFocused && "text-sm"
         }`}
