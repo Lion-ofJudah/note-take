@@ -20,6 +20,7 @@ export default function PasswordInput({ id, value, onChange }: Props) {
         id={id}
         value={value}
         onChange={onChange}
+        autoComplete="on"
         placeholder="Password"
         className="w-full focus-within:outline-none focus-within:border-none"
       />
