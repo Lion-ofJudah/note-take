@@ -8,17 +8,10 @@ export const createNote = [
     try {
       const { title, body } = req.body;
 
-      if (!title) {
+      if (!title && !body) {
         return res.status(400).json({
           success: false,
-          message: "Provide a title for your note.",
-        });
-      }
-
-      if (!body) {
-        return res.status(400).json({
-          success: false,
-          message: "Provide a body for your note.",
+          message: "Empty note not supported.",
         });
       }
 
