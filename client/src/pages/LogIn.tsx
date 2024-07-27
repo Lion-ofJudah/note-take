@@ -34,6 +34,7 @@ export default function LogIn() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(inputData),
+        credentials: "include",
       });
 
       const data = await response.json();
