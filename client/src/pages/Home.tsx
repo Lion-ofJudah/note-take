@@ -74,25 +74,25 @@ export default function Home() {
       if (note.title !== "" || note.body !== "") {
         note._id = userNotes.length.toString();
         setUserNotes([...userNotes, note]);
-      }
 
-      const response = await fetch("http://localhost:3000/api/note/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(note),
-        credentials: "include",
-      });
+        const response = await fetch("http://localhost:3000/api/note/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(note),
+          credentials: "include",
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!data.success) {
-        console.log(data.message);
-        setUserNotes([...userNotes, data.data]);
-        return;
-      } else {
-        console.log(data);
+        if (!data.success) {
+          console.log(data.message);
+          setUserNotes([...userNotes, data.data]);
+          return;
+        } else {
+          console.log(data);
+        }
       }
     } catch (error) {
       console.log(error);
