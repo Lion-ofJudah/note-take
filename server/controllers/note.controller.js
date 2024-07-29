@@ -79,6 +79,40 @@ export const deleteNote = [
   },
 ];
 
+export const permanentDeleteNote = [
+  verifiedUser,
+
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const creator = req.user.id;
+
+      const binNote = await Bin.findById(id);
+      if (!binNote) {
+        return res.status(404).json({
+          success: false,
+          message: "Note not found.",
+        });
+      }
+
+      if (creator !== binNote.creator.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized action.",
+        });
+      }
+
+      await Bin.findByIdAndDelete(id);
+      res.status(200).json({
+        success: true,
+        message: "Note permanently deleted successfully.",
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  },
+];
+
 export const updateNote = [
   verifiedUser,
 
