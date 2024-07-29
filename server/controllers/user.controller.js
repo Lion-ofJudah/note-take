@@ -9,7 +9,7 @@ export const getNotes = [
       const userId = req.user.id;
 
       if (!userId) {
-        return res.status(400).json({
+        return res.status(403).json({
           success: false,
           message: "Unauthorized user.",
         });
