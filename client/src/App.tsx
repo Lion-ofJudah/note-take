@@ -5,6 +5,7 @@ import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
 import PageNotFound from "./pages/PageNotFound";
+import ProtectRoute from "./components/ProtectRoute";
 
 function AppTemplate() {
   const location = useLocation();
@@ -13,8 +14,10 @@ function AppTemplate() {
     <>
       {headerPath.includes(location.pathname) && <Header />}
       <Routes>
-        <Route path={"/"} element={<Home />} />
-        <Route path={"/profile"} element={<Profile />} />
+        <Route path="/" element={<ProtectRoute />}>
+          <Route path={"/"} element={<Home />} />
+          <Route path={"/profile"} element={<Profile />} />
+        </Route>
         <Route path={"/login"} element={<LogIn />} />
         <Route path={"/signup"} element={<SignUp />} />
         <Route path={"*"} element={<PageNotFound />} />
