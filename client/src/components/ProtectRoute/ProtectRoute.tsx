@@ -7,7 +7,9 @@ export default function ProtectRoute() {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    setIsAuthenticated(!!token);
+    if (token && token !== "undefined") {
+      setIsAuthenticated(true);
+    }
     setIsLoading(false);
   }, []);
 

@@ -44,7 +44,7 @@ export default function LogIn() {
         setPopupType("error");
       } else {
         setPopupMessage(data.message);
-        localStorage.setItem("accessToken", data.token);
+        localStorage.setItem("accessToken", data.data.token);
         setPopupType("success");
         navigate("/");
       }
