@@ -14,10 +14,22 @@ function AppTemplate() {
     <>
       {headerPath.includes(location.pathname) && <Header />}
       <Routes>
-        <Route path="/" element={<ProtectRoute />}>
-          <Route path={"/"} element={<Home />} />
-          <Route path={"/profile"} element={<Profile />} />
-        </Route>
+        <Route
+          path="/"
+          element={
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path={"/profile"}
+          element={
+            <ProtectRoute>
+              <Profile />
+            </ProtectRoute>
+          }
+        />
         <Route path={"/login"} element={<LogIn />} />
         <Route path={"/signup"} element={<SignUp />} />
         <Route path={"*"} element={<PageNotFound />} />

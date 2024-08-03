@@ -4,6 +4,7 @@ import {
   signUpValidator,
 } from "../middlewares/auth.middleware.js";
 import { errorLog } from "../utils/logger.js";
+import jwt from "jsonwebtoken";
 
 export const userSignUp = [
   signUpValidator,
@@ -85,3 +86,44 @@ export const userLogin = [
     }
   },
 ];
+
+export const verifyToken = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token not found.",
+      });
+    }
+
+    jwt.verify(token, process.env.JWT_KEY, (error, user) => {
+      if (error) {
+        return res.status(401).json({
+          success: false,
+          message: "Token is invalid.",
+        });
+      }
+
+      const localToken = req.headers["authorization"]?.split(" ")[1];
+
+      if (localToken !== token) {
+        return res.status(401).json({
+          success: false,
+          message: "Local storage token mismatch.",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: { user },
+      });
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
