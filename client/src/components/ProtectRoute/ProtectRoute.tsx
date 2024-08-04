@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface Props {
   children: React.ReactNode;
@@ -50,7 +51,7 @@ export default function ProtectRoute({ children }: Props) {
   }, [navigate]);
 
   if (!isAuthenticated) {
-    return <div>Loading ...</div>;
+    return <LoadingSpinner />;
   }
 
   return isAuthenticated && <>{children}</>;
