@@ -51,6 +51,32 @@ export default function Home() {
     getNotes();
   }, []);
 
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/note/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      setUserNotes(userNotes.filter((note) => note._id !== id));
+      const data = await response.json();
+
+      if (!data.success) {
+        console.log(data.message);
+        return;
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleBlur = async (event: React.FocusEvent<HTMLFormElement>) => {
     if (event.currentTarget.contains(event.relatedTarget as Node)) {
       return;
@@ -117,7 +143,14 @@ export default function Home() {
         <div className="w-11/12 md:px-[10px] lg:px-[127.42px] xl:px-0 xl:w-[1402px] flex flex-wrap items-center justify-center md:items-start md:justify-start gap-10">
           {userNotes.map((note) => {
             return (
-              <NoteCard key={note._id} title={note.title} body={note.body} />
+              <NoteCard
+                key={note._id}
+                title={note.title}
+                body={note.body}
+                onDelete={() => {
+                  handleDelete(note._id);
+                }}
+              />
             );
           })}
         </div>
