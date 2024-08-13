@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 
-export default function Sidebar() {
-  const [isTextHidden, setIsTextHidden] = useState(true);
+interface Props {
+  textHidden: boolean;
+}
+
+export default function Sidebar({ textHidden }: Props) {
+  const [isTextHidden, setIsTextHidden] = useState(textHidden);
   const location = useLocation();
 
-  console.log(location.pathname);
+  useEffect(() => {
+    setIsTextHidden(textHidden);
+  }, [textHidden]);
 
   const getPathName = (text: string) => {
     text = text.toLowerCase();
@@ -84,8 +90,8 @@ export default function Sidebar() {
   return (
     <div
       onMouseEnter={() => setIsTextHidden(false)}
-      onMouseLeave={() => setIsTextHidden(true)}
-      className={`pt-5 shadow-md flex flex-col justify-between h-full  transition-all ease-in-out duration-500 ${
+      onMouseLeave={() => setIsTextHidden(textHidden)}
+      className={`pt-5 shadow-md flex flex-col justify-between h-full ${
         isTextHidden ? "w-20" : "w-48"
       }`}
     >

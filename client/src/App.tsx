@@ -1,40 +1,29 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
-import Header from "./components/Header";
+import Layout from "./components/Layout";
 import PageNotFound from "./pages/PageNotFound";
 import ProtectRoute from "./components/ProtectRoute";
 
 function AppTemplate() {
-  const location = useLocation();
-  const headerPath = ["/profile", "/"];
   return (
-    <>
-      {headerPath.includes(location.pathname) && <Header />}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectRoute>
-              <Home />
-            </ProtectRoute>
-          }
-        />
-        <Route
-          path={"/profile"}
-          element={
-            <ProtectRoute>
-              <Profile />
-            </ProtectRoute>
-          }
-        />
-        <Route path={"/login"} element={<LogIn />} />
-        <Route path={"/signup"} element={<SignUp />} />
-        <Route path={"*"} element={<PageNotFound />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route
+        element={
+          <ProtectRoute>
+            <Layout />
+          </ProtectRoute>
+        }
+      >
+        <Route path={"/"} element={<Home />} />
+        <Route path={"/profile"} element={<Profile />} />
+      </Route>
+      <Route path={"/login"} element={<LogIn />} />
+      <Route path={"/signup"} element={<SignUp />} />
+      <Route path={"*"} element={<PageNotFound />} />
+    </Routes>
   );
 }
 
