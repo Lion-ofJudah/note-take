@@ -24,7 +24,7 @@ export default function Home() {
     const getNotes = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/user/getnotes",
+          "http://localhost:3000/api/user/get-notes",
           {
             method: "GET",
             headers: {
