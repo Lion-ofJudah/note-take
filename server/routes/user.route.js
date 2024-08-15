@@ -1,8 +1,9 @@
 import express from "express";
-import { getNotes } from "../controllers/user.controller.js";
+import { getNotes, getBinNotes } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
-router.get("/getnotes", getNotes);
+router.get("/get-notes", getNotes);
+router.get("/get-bin-notes", getBinNotes);
 
 export default router;
