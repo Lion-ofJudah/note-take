@@ -1,6 +1,7 @@
 import { verifiedUser } from "../middlewares/verifiedUser.middleware.js";
 import Note from "../models/note.model.js";
 import Bin from "../models/bin.model.js";
+import Archive from "../models/archive.model.js";
 
 export const createNote = [
   verifiedUser,
@@ -30,7 +31,10 @@ export const createNote = [
         data: note,
       });
     } catch (error) {
-      res.status(500).json({ success: false, message: "Server error" });
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
     }
   },
 ];
@@ -74,7 +78,10 @@ export const deleteNote = [
         data: bin,
       });
     } catch (error) {
-      res.status(500).json({ success: false, message: "Server error" });
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
     }
   },
 ];
@@ -108,7 +115,10 @@ export const permanentDeleteNote = [
         message: "Note permanently deleted successfully.",
       });
     } catch (error) {
-      res.status(500).json({ success: false, message: "Server error" });
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
     }
   },
 ];
@@ -169,7 +179,55 @@ export const updateNote = [
         data: updatedNote,
       });
     } catch (error) {
-      res.status(500).json({ success: false, message: "Server error" });
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    }
+  },
+];
+
+export const archiveNote = [
+  verifiedUser,
+
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const creator = req.user.id;
+
+      const note = await Note.findById(id);
+
+      if (!note) {
+        return res.status(404).json({
+          success: false,
+          message: "Note not found.",
+        });
+      }
+
+      if (creator !== note.creator.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized action.",
+        });
+      }
+
+      const archive = await Archive.create({
+        title: note.title,
+        body: note.body,
+        creator: note.creator,
+      });
+      await Note.findByIdAndDelete(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Note archived successfully.",
+        data: archive,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
     }
   },
 ];
