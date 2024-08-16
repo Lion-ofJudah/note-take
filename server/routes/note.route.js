@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.post("/create", createNote);
-router.delete("/delete/:id", deleteNote);
+router.post("/delete/:id", deleteNote);
 router.delete("/permanent-delete/:id", permanentDeleteNote);
 router.post("/update/:id", updateNote);
 router.post("/archive/:id", archiveNote);
