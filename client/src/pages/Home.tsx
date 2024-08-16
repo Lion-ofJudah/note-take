@@ -56,7 +56,7 @@ export default function Home() {
       const response = await fetch(
         `http://localhost:3000/api/note/delete/${id}`,
         {
-          method: "DELETE",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
