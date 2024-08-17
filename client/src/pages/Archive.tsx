@@ -1,21 +1,60 @@
+import { useEffect, useState } from "react";
+import NoteCard from "../components/NoteCard";
+
+interface Note {
+  title: string;
+  body: string;
+  _id: string;
+}
+
 export default function Archive() {
+  const [archiveNotes, setArchiveNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    const getArchiveNotes = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/user/get-archive-notes",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+          console.log(data.message);
+          return;
+        } else {
+          console.log(data);
+          setArchiveNotes(data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getArchiveNotes();
+  }, []);
+
   return (
-    <div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3V9.75m0 0l3 3m-3-3-3 3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-          //   d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3V9.75m0 0l3 3m-3-3-3 3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-        />
-      </svg>
+    <div className="mt-4 px-5 flex flex-col items-center relative">
+      <div className="w-11/12 md:px-[10px] lg:px-[127.42px] xl:px-0 xl:w-[1402px] flex flex-wrap items-center justify-center md:items-start md:justify-start gap-10">
+        {archiveNotes.map((note) => {
+          return (
+            <NoteCard
+              key={note._id}
+              title={note.title}
+              body={note.body}
+              onDelete={() => {}}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
